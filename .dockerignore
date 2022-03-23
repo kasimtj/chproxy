@@ -1,0 +1,6 @@
+./.golangci.yml
+./.env.example
+./Makefile
+./README.md
+.git
+.gitignore

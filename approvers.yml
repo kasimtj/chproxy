@@ -1,0 +1,6 @@
+default:
+  count: 1
+  target_branch: master
+  groups:
+    - sme-delivery-center
+    - statist-owners
