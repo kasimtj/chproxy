@@ -14,12 +14,12 @@ module.exports = {
               "resources": {
                 "replicas": 2,
                 "requests": {
-                  "cpu": '500m',
-                  "memory": '512Mi',
+                  "cpu": '250m',
+                  "memory": '256Mi',
                 },
                 "limits": {
-                  "cpu": '500m',
-                  "memory": '512Mi',
+                  "cpu": '250m',
+                  "memory": '256Mi',
                 },
               },
               "ports": {
@@ -66,14 +66,14 @@ module.exports = {
             {
               "name": "app",
               "resources": {
-                "replicas": 2,
+                "replicas": 1,
                 "requests": {
-                  "cpu": '500m',
-                  "memory": '512Mi',
+                  "cpu": '50m',
+                  "memory": '64Mi',
                 },
                 "limits": {
-                  "cpu": '500m',
-                  "memory": '512Mi',
+                  "cpu": '100m',
+                  "memory": '128Mi',
                 },
               },
               "ports": {
