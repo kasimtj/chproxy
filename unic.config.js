@@ -14,12 +14,12 @@ module.exports = {
               "resources": {
                 "replicas": 2,
                 "requests": {
-                  "cpu": '250m',
-                  "memory": '256Mi',
+                  "cpu": '50m',
+                  "memory": '128Mi',
                 },
                 "limits": {
-                  "cpu": '250m',
-                  "memory": '256Mi',
+                  "cpu": '50m',
+                  "memory": '128Mi',
                 },
               },
               "ports": {
@@ -72,8 +72,8 @@ module.exports = {
                   "memory": '64Mi',
                 },
                 "limits": {
-                  "cpu": '100m',
-                  "memory": '128Mi',
+                  "cpu": '50m',
+                  "memory": '64Mi',
                 },
               },
               "ports": {
