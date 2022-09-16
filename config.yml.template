@@ -33,6 +33,22 @@ users:
     max_concurrent_queries: 10
     max_execution_time: 10s
     requests_per_minute: 30
+    
+    # The maximum number of requests that may wait for their chance
+    # to be executed because they cannot run now due to the current limits.
+    #
+    # This option may be useful for handling request bursts from `tabix`
+    # or `clickhouse-grafana`.
+    #
+    # By default all the requests are immediately executed without
+    # waiting in the queue.
+    max_queue_size: 10
+
+    # The maximum duration the queued requests may wait for their chance
+    # to be executed.
+    # This option makes sense only if max_queue_size is set.
+    # By default requests wait for up to 10 seconds in the queue.
+    max_queue_time: 10s
 
   - name: $CLICKHOUSE_SME_USER
     password: $CLICKHOUSE_SME_PASSWORD
@@ -55,22 +71,6 @@ users:
     requests_per_minute: 30
     max_queue_time: 10s
     max_queue_size: 20
-    
-    # The maximum number of requests that may wait for their chance
-    # to be executed because they cannot run now due to the current limits.
-    #
-    # This option may be useful for handling request bursts from `tabix`
-    # or `clickhouse-grafana`.
-    #
-    # By default all the requests are immediately executed without
-    # waiting in the queue.
-    max_queue_size: 10
-
-    # The maximum duration the queued requests may wait for their chance
-    # to be executed.
-    # This option makes sense only if max_queue_size is set.
-    # By default requests wait for up to 10 seconds in the queue.
-    max_queue_time: 10s
 
 clusters:
   - name: "yandex_cloud"
@@ -83,4 +83,7 @@ clusters:
         password: $CLICKHOUSE_PROJECT_OWNER_PASSWORD
       - name: $CLICKHOUSE_DWH_USER
         password: $CLICKHOUSE_DWH_PASSWORD
-
+      - name: $CLICKHOUSE_CHARTS_USER
+        password: $CLICKHOUSE_CHARTS_PASSWORD
+      - name: $CLICKHOUSE_SME_USER
+        password: $CLICKHOUSE_SME_PASSWORD
