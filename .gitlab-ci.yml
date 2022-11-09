@@ -29,7 +29,7 @@ stages:
 
 .build-base:
   image:
-    name: docker-hosted.artifactory.tcsbank.ru/cicd-images/base-kaniko:v1.7.15
+    name: docker-hosted.artifactory.tcsbank.ru/cicd-images/base-kaniko:release-v1.8.12
   before_script:
     - dp auth service-acc --key-file $DP_DEPLOY_SERVICE_KEY # в переменной должен лежать ключ сервис-аккаунта
     - dp auth configure-kaniko # настройка kaniko (токен действует 1 час)
@@ -48,6 +48,8 @@ stages:
                  --build-arg "CLICKHOUSE_CHARTS_PASSWORD=$CLICKHOUSE_CHARTS_PASSWORD" \
                  --build-arg "CLICKHOUSE_SME_USER=$CLICKHOUSE_SME_USER" \
                  --build-arg "CLICKHOUSE_SME_PASSWORD=$CLICKHOUSE_SME_PASSWORD" \
+                 --build-arg "CLICKHOUSE_DCO_USER=$CLICKHOUSE_DCO_USER" \
+                 --build-arg "CLICKHOUSE_DCO_PASSWORD=$CLICKHOUSE_DCO_PASSWORD" \
                  --build-arg "CLICKHOUSE_NODES=$CLICKHOUSE_NODES" \
                  --build-arg "https_proxy=$https_proxy" \
                  --build-arg "no_proxy=$no_proxy" \
@@ -77,6 +79,8 @@ build-prod:
     CLICKHOUSE_CHARTS_PASSWORD: $CLICKHOUSE_CHARTS_PASSWORD
     CLICKHOUSE_SME_USER: $CLICKHOUSE_SME_USER
     CLICKHOUSE_SME_PASSWORD: $CLICKHOUSE_SME_PASSWORD
+    CLICKHOUSE_DCO_USER: $CLICKHOUSE_DCO_USER
+    CLICKHOUSE_DCO_PASSWORD: $CLICKHOUSE_DCO_PASSWORD
     PREFIX: stable
     CLUSTER: prod2
   only:
@@ -93,6 +97,8 @@ build-dev:
     CLICKHOUSE_PROJECT_OWNER_PASSWORD: $CLICKHOUSE_PROJECT_OWNER_PASSWORD_DEV
     CLICKHOUSE_DWH_USER: $CLICKHOUSE_DWH_USER
     CLICKHOUSE_DWH_PASSWORD: $CLICKHOUSE_DWH_PASSWORD
+    CLICKHOUSE_DCO_USER: $CLICKHOUSE_DCO_USER
+    CLICKHOUSE_DCO_PASSWORD: $CLICKHOUSE_DCO_PASSWORD
     PREFIX: latest
     CLUSTER: dev2
   only:

@@ -72,6 +72,17 @@ users:
     max_queue_time: 10s
     max_queue_size: 20
 
+  - name: $CLICKHOUSE_DCO_USER
+    password: $CLICKHOUSE_DCO_PASSWORD
+    to_cluster: "yandex_cloud"
+    to_user: $CLICKHOUSE_DCO_USER
+
+    max_concurrent_queries: 5
+    max_execution_time: 10s
+    requests_per_minute: 15
+    max_queue_time: 10s
+    max_queue_size: 10
+
 clusters:
   - name: "yandex_cloud"
     scheme: "http"
@@ -87,3 +98,5 @@ clusters:
         password: $CLICKHOUSE_CHARTS_PASSWORD
       - name: $CLICKHOUSE_SME_USER
         password: $CLICKHOUSE_SME_PASSWORD
+      - name: $CLICKHOUSE_DCO_USER
+        password: $CLICKHOUSE_DCO_PASSWORD
