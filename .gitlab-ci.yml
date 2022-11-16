@@ -62,7 +62,7 @@ stages:
     - echo "pushed to ${DOCKER_IMAGE}"
   variables:
     IMAGE_NAME_FOR_CHECK: "docker-hosted/${CI_PROJECT_NAMESPACE}/${SERVICE_NAME}/${CLUSTER}/${PREFIX}-${IMAGE_TAG}/*"
-    CLICKHOUSE_NODES: "[\"10.96.7.36:8123\",\"10.96.7.30:8123\",\"10.96.7.34:8123\",\"10.97.7.39:8123\",\"10.97.7.5:8123\",\"10.97.7.40:8123\",\"10.97.7.17:8123\"]"
+    CLICKHOUSE_NODES: "[\"10.96.7.24:8123\",\"10.96.7.36:8123\",\"10.96.7.8:8123\",\"10.97.7.39:8123\",\"10.97.7.19:8123\",\"10.97.7.17:8123\"]"
 
 build-prod:
   extends:
