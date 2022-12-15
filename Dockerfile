@@ -1,4 +1,4 @@
-FROM docker-hosted.artifactory.tcsbank.ru/cicd-images/base-image-focal as builder
+FROM docker-hosted.artifactory.tcsbank.ru/cicd-images/base-focal as builder
 
 ARG SRC_DIR=/opt
 ARG CHPROXY_NAME=chproxy
@@ -7,6 +7,8 @@ ENV CHPROXY_CONFIG_TEMPLATE=${SRC_DIR}/config.yml.template
 
 ARG CLICKHOUSE_USER
 ARG CLICKHOUSE_PASSWORD
+ARG CLICKHOUSE_USER_TEST
+ARG CLICKHOUSE_PASSWORD_TEST
 ARG CLICKHOUSE_PROJECT_OWNER_USER
 ARG CLICKHOUSE_PROJECT_OWNER_PASSWORD
 ARG CLICKHOUSE_DWH_USER
@@ -19,6 +21,8 @@ ARG CLICKHOUSE_DCO_USER
 ARG CLICKHOUSE_DCO_PASSWORD
 
 ARG CLICKHOUSE_NODES
+
+RUN echo "deb [trusted=yes] http://apt-proxy.tcsbank.ru/repository/apt-ubuntu/ focal main restricted universe multiverse" > /etc/apt/sources.list && echo "deb [trusted=yes] http://apt-proxy.tcsbank.ru/repository/apt-ubuntu/ focal-updates main restricted universe multiverse" >> /etc/apt/sources.list && echo "deb [trusted=yes] http://apt-proxy.tcsbank.ru/repository/apt-ubuntu/ focal-backports main restricted universe multiverse" >> /etc/apt/sources.list && echo "deb [trusted=yes] http://apt-proxy.tcsbank.ru/repository/apt-ubuntu/ focal-security main restricted universe multiverse" >> /etc/apt/sources.list
 
 RUN apt-get update -y && \
     apt-get install gettext-base -y && \
@@ -35,7 +39,7 @@ RUN tar -zxf chproxy-linux-amd64.tar.gz && \
 COPY config.yml.template ${CHPROXY_CONFIG_TEMPLATE}
 RUN envsubst < ${CHPROXY_CONFIG_TEMPLATE} > ${CHPROXY_CONFIG}
 
-FROM docker-hosted.artifactory.tcsbank.ru/cicd-images/base-image-focal
+FROM docker-hosted.artifactory.tcsbank.ru/cicd-images/base-focal
 
 ENV SRC_DIR=/opt
 ENV CHPROXY_NAME=chproxy
