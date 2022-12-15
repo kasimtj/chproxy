@@ -15,10 +15,10 @@ users:
     to_cluster: "yandex_cloud"
     to_user: $CLICKHOUSE_USER
 
-  - name: $CLICKHOUSE_USER_TEST
-    password: $CLICKHOUSE_PASSWORD_TEST
+  - name: $CLICKHOUSE_PROJECT_OWNER_USER_DEV
+    password: $CLICKHOUSE_PROJECT_OWNER_PASSWORD_DEV
     to_cluster: "yandex_cloud"
-    to_user: $CLICKHOUSE_USER_TEST
+    to_user: $CLICKHOUSE_PROJECT_OWNER_USER_DEV
 
   - name: $CLICKHOUSE_PROJECT_OWNER_USER
     password: $CLICKHOUSE_PROJECT_OWNER_PASSWORD
@@ -96,8 +96,8 @@ clusters:
     users:
       - name: $CLICKHOUSE_USER
         password: $CLICKHOUSE_PASSWORD
-      - name: $CLICKHOUSE_USER_TEST
-        password: $CLICKHOUSE_PASSWORD_TEST
+      - name: $CLICKHOUSE_PROJECT_OWNER_USER_DEV
+        password: $CLICKHOUSE_PROJECT_OWNER_PASSWORD_DEV
       - name: $CLICKHOUSE_PROJECT_OWNER_USER
         password: $CLICKHOUSE_PROJECT_OWNER_PASSWORD
       - name: $CLICKHOUSE_DWH_USER
