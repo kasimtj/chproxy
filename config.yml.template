@@ -10,10 +10,15 @@ server:
     listen_addr: ":8080"
 
 users:
-  - name: $CLICKHOUSE_USER
-    password: $CLICKHOUSE_PASSWORD
+  - name: $CLICKHOUSE_USER_TEST
+    password: $CLICKHOUSE_PASSWORD_TEST
     to_cluster: "yandex_cloud"
-    to_user: $CLICKHOUSE_USER
+    to_user: $CLICKHOUSE_USER_TEST
+
+  - name: $CLICKHOUSE_USER_PROD
+    password: $CLICKHOUSE_PASSWORD_PROD
+    to_cluster: "yandex_cloud"
+    to_user: $CLICKHOUSE_USER_PROD
 
   - name: $CLICKHOUSE_PROJECT_OWNER_USER_DEV
     password: $CLICKHOUSE_PROJECT_OWNER_PASSWORD_DEV
@@ -94,8 +99,10 @@ clusters:
     scheme: "http"
     nodes: $CLICKHOUSE_NODES
     users:
-      - name: $CLICKHOUSE_USER
-        password: $CLICKHOUSE_PASSWORD
+      - name: $CLICKHOUSE_USER_PROD
+        password: $CLICKHOUSE_PASSWORD_PROD
+      - name: $CLICKHOUSE_USER_TEST
+        password: $CLICKHOUSE_PASSWORD_TEST
       - name: $CLICKHOUSE_PROJECT_OWNER_USER_DEV
         password: $CLICKHOUSE_PROJECT_OWNER_PASSWORD_DEV
       - name: $CLICKHOUSE_PROJECT_OWNER_USER
