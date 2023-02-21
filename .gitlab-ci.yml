@@ -59,6 +59,7 @@ stages:
                  --build-arg "no_proxy=$no_proxy" \
                  --build-arg "BUILD_VERSION=${CI_COMMIT_REF_NAME}" \
                  --build-arg "BUILD_HASH=${CI_COMMIT_SHA}" \
+                 --build-arg "REDIS_PASSWORD=$REDIS_PASSWORD" \
                  --context ${CI_PROJECT_DIR} \
                  --destination "${DOCKER_IMAGE}" \
                  --log-timestamp \
@@ -83,6 +84,7 @@ stages:
     CLICKHOUSE_SME_PASSWORD: $CLICKHOUSE_SME_PASSWORD
     CLICKHOUSE_DCO_USER: $CLICKHOUSE_DCO_USER
     CLICKHOUSE_DCO_PASSWORD: $CLICKHOUSE_DCO_PASSWORD
+    REDIS_PASSWORD: $YANDEX_CLOUD_REDIS_CACHE_PASSWORD_PROD
     PREFIX: stable
     CLUSTER: prod2
 build-dev:

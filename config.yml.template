@@ -1,7 +1,17 @@
 ---
 hack_me_please: true
 
-caches: []
+caches:
+  - name: "shortterm"
+    mode: "redis"
+    redis:
+      addresses:
+        - rc1b-ougvwpvuac47ryik.mdb.yandexcloud.net:6379
+      username: default
+      password: $REDIS_PASSWORD
+    expire: 1h
+    shared_with_all_users: true
+
 network_groups: []
 param_groups: []
 
@@ -14,16 +24,19 @@ users:
     password: $CLICKHOUSE_PASSWORD_TEST
     to_cluster: "yandex_cloud"
     to_user: $CLICKHOUSE_USER_TEST
+    cache: "shortterm"
 
   - name: $CLICKHOUSE_USER_PROD
     password: $CLICKHOUSE_PASSWORD_PROD
     to_cluster: "yandex_cloud"
     to_user: $CLICKHOUSE_USER_PROD
+    cache: "shortterm"
 
   - name: $CLICKHOUSE_PROJECT_OWNER_USER_DEV
     password: $CLICKHOUSE_PROJECT_OWNER_PASSWORD_DEV
     to_cluster: "yandex_cloud"
     to_user: $CLICKHOUSE_PROJECT_OWNER_USER_DEV
+    cache: "shortterm"
 
   - name: $CLICKHOUSE_PROJECT_OWNER_USER
     password: $CLICKHOUSE_PROJECT_OWNER_PASSWORD
@@ -35,6 +48,7 @@ users:
     requests_per_minute: 30
     max_queue_time: 10s
     max_queue_size: 10
+    cache: "shortterm"
 
   - name: $CLICKHOUSE_DWH_USER
     password: $CLICKHOUSE_DWH_PASSWORD
@@ -44,6 +58,7 @@ users:
     max_concurrent_queries: 10
     max_execution_time: 10s
     requests_per_minute: 30
+    cache: "shortterm"
     
     # The maximum number of requests that may wait for their chance
     # to be executed because they cannot run now due to the current limits.
@@ -71,6 +86,7 @@ users:
     requests_per_minute: 15
     max_queue_time: 10s
     max_queue_size: 10
+    cache: "shortterm"
 
   - name: $CLICKHOUSE_CHARTS_USER
     password: $CLICKHOUSE_CHARTS_PASSWORD
@@ -82,6 +98,7 @@ users:
     requests_per_minute: 30
     max_queue_time: 10s
     max_queue_size: 20
+    cache: "shortterm"
 
   - name: $CLICKHOUSE_DCO_USER
     password: $CLICKHOUSE_DCO_PASSWORD
@@ -93,6 +110,7 @@ users:
     requests_per_minute: 15
     max_queue_time: 10s
     max_queue_size: 10
+    cache: "shortterm"
 
 clusters:
   - name: "yandex_cloud"
