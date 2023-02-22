@@ -35,36 +35,43 @@ stages:
     - dp auth configure-kaniko # настройка kaniko (токен действует 1 час)
   script:
     - echo "build and push to ${DOCKER_IMAGE}"
+    - IMAGE_CHECK_OUTPUT=$(dp jfrog rt s "${IMAGE_NAME_FOR_CHECK}" 2>&1)
+    - echo ${IMAGE_CHECK_OUTPUT}
     - |- 
-      executor --dockerfile $CI_PROJECT_DIR/Dockerfile \
-                 --build-arg "http_proxy=$http_proxy" \
-                 --build-arg "CLICKHOUSE_USER_PROD=$CLICKHOUSE_USER_PROD" \
-                 --build-arg "CLICKHOUSE_PASSWORD_PROD=$CLICKHOUSE_PASSWORD_PROD" \
-                 --build-arg "CLICKHOUSE_USER_TEST=$CLICKHOUSE_USER_TEST" \
-                 --build-arg "CLICKHOUSE_PASSWORD_TEST=$CLICKHOUSE_PASSWORD_TEST" \
-                 --build-arg "CLICKHOUSE_PROJECT_OWNER_USER_DEV=$CLICKHOUSE_PROJECT_OWNER_USER_DEV" \
-                 --build-arg "CLICKHOUSE_PROJECT_OWNER_PASSWORD_DEV=$CLICKHOUSE_PROJECT_OWNER_PASSWORD_DEV" \
-                 --build-arg "CLICKHOUSE_PROJECT_OWNER_USER=$CLICKHOUSE_PROJECT_OWNER_USER" \
-                 --build-arg "CLICKHOUSE_PROJECT_OWNER_PASSWORD=$CLICKHOUSE_PROJECT_OWNER_PASSWORD" \
-                 --build-arg "CLICKHOUSE_DWH_USER=$CLICKHOUSE_DWH_USER" \
-                 --build-arg "CLICKHOUSE_DWH_PASSWORD=$CLICKHOUSE_DWH_PASSWORD" \
-                 --build-arg "CLICKHOUSE_CHARTS_USER=$CLICKHOUSE_CHARTS_USER" \
-                 --build-arg "CLICKHOUSE_CHARTS_PASSWORD=$CLICKHOUSE_CHARTS_PASSWORD" \
-                 --build-arg "CLICKHOUSE_SME_USER=$CLICKHOUSE_SME_USER" \
-                 --build-arg "CLICKHOUSE_SME_PASSWORD=$CLICKHOUSE_SME_PASSWORD" \
-                 --build-arg "CLICKHOUSE_DCO_USER=$CLICKHOUSE_DCO_USER" \
-                 --build-arg "CLICKHOUSE_DCO_PASSWORD=$CLICKHOUSE_DCO_PASSWORD" \
-                 --build-arg "CLICKHOUSE_NODES=$CLICKHOUSE_NODES" \
-                 --build-arg "https_proxy=$https_proxy" \
-                 --build-arg "no_proxy=$no_proxy" \
-                 --build-arg "BUILD_VERSION=${CI_COMMIT_REF_NAME}" \
-                 --build-arg "BUILD_HASH=${CI_COMMIT_SHA}" \
-                 --build-arg "REDIS_PASSWORD=$REDIS_PASSWORD" \
-                 --context ${CI_PROJECT_DIR} \
-                 --destination "${DOCKER_IMAGE}" \
-                 --log-timestamp \
-                 -v debug
-    - echo "pushed to ${DOCKER_IMAGE}"
+      if $( echo ${IMAGE_CHECK_OUTPUT} | grep -q "Found 0 artifacts" )
+      then
+        executor --dockerfile $CI_PROJECT_DIR/Dockerfile \
+                  --build-arg "http_proxy=$http_proxy" \
+                  --build-arg "CLICKHOUSE_USER_PROD=$CLICKHOUSE_USER_PROD" \
+                  --build-arg "CLICKHOUSE_PASSWORD_PROD=$CLICKHOUSE_PASSWORD_PROD" \
+                  --build-arg "CLICKHOUSE_USER_TEST=$CLICKHOUSE_USER_TEST" \
+                  --build-arg "CLICKHOUSE_PASSWORD_TEST=$CLICKHOUSE_PASSWORD_TEST" \
+                  --build-arg "CLICKHOUSE_PROJECT_OWNER_USER_DEV=$CLICKHOUSE_PROJECT_OWNER_USER_DEV" \
+                  --build-arg "CLICKHOUSE_PROJECT_OWNER_PASSWORD_DEV=$CLICKHOUSE_PROJECT_OWNER_PASSWORD_DEV" \
+                  --build-arg "CLICKHOUSE_PROJECT_OWNER_USER=$CLICKHOUSE_PROJECT_OWNER_USER" \
+                  --build-arg "CLICKHOUSE_PROJECT_OWNER_PASSWORD=$CLICKHOUSE_PROJECT_OWNER_PASSWORD" \
+                  --build-arg "CLICKHOUSE_DWH_USER=$CLICKHOUSE_DWH_USER" \
+                  --build-arg "CLICKHOUSE_DWH_PASSWORD=$CLICKHOUSE_DWH_PASSWORD" \
+                  --build-arg "CLICKHOUSE_CHARTS_USER=$CLICKHOUSE_CHARTS_USER" \
+                  --build-arg "CLICKHOUSE_CHARTS_PASSWORD=$CLICKHOUSE_CHARTS_PASSWORD" \
+                  --build-arg "CLICKHOUSE_SME_USER=$CLICKHOUSE_SME_USER" \
+                  --build-arg "CLICKHOUSE_SME_PASSWORD=$CLICKHOUSE_SME_PASSWORD" \
+                  --build-arg "CLICKHOUSE_DCO_USER=$CLICKHOUSE_DCO_USER" \
+                  --build-arg "CLICKHOUSE_DCO_PASSWORD=$CLICKHOUSE_DCO_PASSWORD" \
+                  --build-arg "CLICKHOUSE_NODES=$CLICKHOUSE_NODES" \
+                  --build-arg "https_proxy=$https_proxy" \
+                  --build-arg "no_proxy=$no_proxy" \
+                  --build-arg "BUILD_VERSION=${CI_COMMIT_REF_NAME}" \
+                  --build-arg "BUILD_HASH=${CI_COMMIT_SHA}" \
+                  --build-arg "REDIS_PASSWORD=$REDIS_PASSWORD" \
+                  --context ${CI_PROJECT_DIR} \
+                  --destination "${DOCKER_IMAGE}" \
+                  --log-timestamp \
+                  -v warn
+        echo "pushed to ${DOCKER_IMAGE}"
+      else
+        echo "image ${DOCKER_IMAGE} already exist"
+      fi
   variables:
     IMAGE_NAME_FOR_CHECK: "docker-hosted/${CI_PROJECT_NAMESPACE}/${SERVICE_NAME}/${CLUSTER}/${PREFIX}-${IMAGE_TAG}/*"
     CLICKHOUSE_NODES: "[\"10.96.7.24:8123\",\"10.96.7.36:8123\",\"10.96.7.8:8123\",\"10.97.7.39:8123\",\"10.97.7.19:8123\",\"10.97.7.17:8123\"]"
