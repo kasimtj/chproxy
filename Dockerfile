@@ -35,7 +35,7 @@ RUN apt-get update -y && \
 
 WORKDIR ${SRC_DIR}
 
-COPY bin/chproxy-linux-amd64-v1.14.0.tar.gz chproxy-linux-amd64.tar.gz
+COPY bin/chproxy_1.21.0_linux_amd64.tar.gz chproxy-linux-amd64.tar.gz
 RUN tar -zxf chproxy-linux-amd64.tar.gz && \
     rm -rf chproxy-linux-amd64.tar.gz
 

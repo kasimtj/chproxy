@@ -6,10 +6,10 @@ caches:
     mode: "redis"
     redis:
       addresses:
-        - rc1b-ougvwpvuac47ryik.mdb.yandexcloud.net:6379
-      username: default
+        - "rc1b-ougvwpvuac47ryik.mdb.yandexcloud.net:6379"
+      username: "default"
       password: $REDIS_PASSWORD
-    expire: 1h
+    expire: "1h"
     shared_with_all_users: true
 
 network_groups: []
