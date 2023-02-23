@@ -46,14 +46,26 @@ module.exports = {
                   "kind": "notification",
                   "agents": [
                     {
-                      "type": "slack",
-                      "token": "$[ENV:SLACK_TOKEN]",
-                      "channel": "#statist-notify",
+                      "type": "mattermost",
+                      "webhookUrl": "$[ENV:MATTERMOST_WEBHOOK_URL]"
                     }
                   ]
                 }
               ],
-              "envs": {}
+              "envs": {},
+              "volumes": [
+                {
+                  "name": "chproxy-config",
+                  "source": {
+                    "secret": {
+                      "secretName": "chproxy-config"
+                    },
+                  },
+                  "mount": {
+                    "mountPath": "/chproxy-config"
+                  }
+                },
+              ],
             },
           ],
         }

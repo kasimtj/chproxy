@@ -23,6 +23,25 @@ variables:
   IMAGE_TAG: $CI_COMMIT_SHA
   DOCKER_IMAGE: "${DOCKER_REGISTRY}/${CI_PROJECT_NAMESPACE}/${SERVICE_NAME}/${CLUSTER}:${PREFIX}-${IMAGE_TAG}"
 
+  CLICKHOUSE_NODES: "[\"10.96.7.24:8123\",\"10.96.7.36:8123\",\"10.96.7.8:8123\",\"10.97.7.39:8123\",\"10.97.7.19:8123\",\"10.97.7.17:8123\"]"
+  CLICKHOUSE_USER_PROD: $CLICKHOUSE_USER_PROD
+  CLICKHOUSE_PASSWORD_PROD: $CLICKHOUSE_PASSWORD_PROD
+  CLICKHOUSE_USER_TEST: $CLICKHOUSE_USER_TEST
+  CLICKHOUSE_PASSWORD_TEST: $CLICKHOUSE_PASSWORD_TEST
+  CLICKHOUSE_PROJECT_OWNER_USER_DEV: $CLICKHOUSE_PROJECT_OWNER_USER_DEV
+  CLICKHOUSE_PROJECT_OWNER_PASSWORD_DEV: $CLICKHOUSE_PROJECT_OWNER_PASSWORD_DEV
+  CLICKHOUSE_PROJECT_OWNER_USER: $CLICKHOUSE_PROJECT_OWNER_USER_PROD
+  CLICKHOUSE_PROJECT_OWNER_PASSWORD: $CLICKHOUSE_PROJECT_OWNER_PASSWORD_PROD
+  CLICKHOUSE_DWH_USER: $CLICKHOUSE_DWH_USER
+  CLICKHOUSE_DWH_PASSWORD: $CLICKHOUSE_DWH_PASSWORD
+  CLICKHOUSE_CHARTS_USER: $CLICKHOUSE_CHARTS_USER
+  CLICKHOUSE_CHARTS_PASSWORD: $CLICKHOUSE_CHARTS_PASSWORD
+  CLICKHOUSE_SME_USER: $CLICKHOUSE_SME_USER
+  CLICKHOUSE_SME_PASSWORD: $CLICKHOUSE_SME_PASSWORD
+  CLICKHOUSE_DCO_USER: $CLICKHOUSE_DCO_USER
+  CLICKHOUSE_DCO_PASSWORD: $CLICKHOUSE_DCO_PASSWORD
+  REDIS_PASSWORD: $YANDEX_CLOUD_REDIS_CACHE_PASSWORD_PROD
+
 stages:
   - build
   - deploy
@@ -41,30 +60,6 @@ stages:
       if $( echo ${IMAGE_CHECK_OUTPUT} | grep -q "Found 0 artifacts" )
       then
         executor --dockerfile $CI_PROJECT_DIR/Dockerfile \
-                  --build-arg "http_proxy=$http_proxy" \
-                  --build-arg "CLICKHOUSE_USER_PROD=$CLICKHOUSE_USER_PROD" \
-                  --build-arg "CLICKHOUSE_PASSWORD_PROD=$CLICKHOUSE_PASSWORD_PROD" \
-                  --build-arg "CLICKHOUSE_USER_TEST=$CLICKHOUSE_USER_TEST" \
-                  --build-arg "CLICKHOUSE_PASSWORD_TEST=$CLICKHOUSE_PASSWORD_TEST" \
-                  --build-arg "CLICKHOUSE_PROJECT_OWNER_USER_DEV=$CLICKHOUSE_PROJECT_OWNER_USER_DEV" \
-                  --build-arg "CLICKHOUSE_PROJECT_OWNER_PASSWORD_DEV=$CLICKHOUSE_PROJECT_OWNER_PASSWORD_DEV" \
-                  --build-arg "CLICKHOUSE_PROJECT_OWNER_USER=$CLICKHOUSE_PROJECT_OWNER_USER" \
-                  --build-arg "CLICKHOUSE_PROJECT_OWNER_PASSWORD=$CLICKHOUSE_PROJECT_OWNER_PASSWORD" \
-                  --build-arg "CLICKHOUSE_DWH_USER=$CLICKHOUSE_DWH_USER" \
-                  --build-arg "CLICKHOUSE_DWH_PASSWORD=$CLICKHOUSE_DWH_PASSWORD" \
-                  --build-arg "CLICKHOUSE_CHARTS_USER=$CLICKHOUSE_CHARTS_USER" \
-                  --build-arg "CLICKHOUSE_CHARTS_PASSWORD=$CLICKHOUSE_CHARTS_PASSWORD" \
-                  --build-arg "CLICKHOUSE_SME_USER=$CLICKHOUSE_SME_USER" \
-                  --build-arg "CLICKHOUSE_SME_PASSWORD=$CLICKHOUSE_SME_PASSWORD" \
-                  --build-arg "CLICKHOUSE_DCO_USER=$CLICKHOUSE_DCO_USER" \
-                  --build-arg "CLICKHOUSE_DCO_PASSWORD=$CLICKHOUSE_DCO_PASSWORD" \
-                  --build-arg "CLICKHOUSE_NODES=$CLICKHOUSE_NODES" \
-                  --build-arg "https_proxy=$https_proxy" \
-                  --build-arg "no_proxy=$no_proxy" \
-                  --build-arg "BUILD_VERSION=${CI_COMMIT_REF_NAME}" \
-                  --build-arg "BUILD_HASH=${CI_COMMIT_SHA}" \
-                  --build-arg "REDIS_PASSWORD=$REDIS_PASSWORD" \
-                  --context ${CI_PROJECT_DIR} \
                   --destination "${DOCKER_IMAGE}" \
                   --log-timestamp \
                   -v warn
@@ -74,39 +69,45 @@ stages:
       fi
   variables:
     IMAGE_NAME_FOR_CHECK: "docker-hosted/${CI_PROJECT_NAMESPACE}/${SERVICE_NAME}/${CLUSTER}/${PREFIX}-${IMAGE_TAG}/*"
-    CLICKHOUSE_NODES: "[\"10.96.7.24:8123\",\"10.96.7.36:8123\",\"10.96.7.8:8123\",\"10.97.7.39:8123\",\"10.97.7.19:8123\",\"10.97.7.17:8123\"]"
-    CLICKHOUSE_USER_PROD: $CLICKHOUSE_USER_PROD
-    CLICKHOUSE_PASSWORD_PROD: $CLICKHOUSE_PASSWORD_PROD
-    CLICKHOUSE_USER_TEST: $CLICKHOUSE_USER_TEST
-    CLICKHOUSE_PASSWORD_TEST: $CLICKHOUSE_PASSWORD_TEST
-    CLICKHOUSE_PROJECT_OWNER_USER_DEV: $CLICKHOUSE_PROJECT_OWNER_USER_DEV
-    CLICKHOUSE_PROJECT_OWNER_PASSWORD_DEV: $CLICKHOUSE_PROJECT_OWNER_PASSWORD_DEV
-    CLICKHOUSE_PROJECT_OWNER_USER: $CLICKHOUSE_PROJECT_OWNER_USER_PROD
-    CLICKHOUSE_PROJECT_OWNER_PASSWORD: $CLICKHOUSE_PROJECT_OWNER_PASSWORD_PROD
-    CLICKHOUSE_DWH_USER: $CLICKHOUSE_DWH_USER
-    CLICKHOUSE_DWH_PASSWORD: $CLICKHOUSE_DWH_PASSWORD
-    CLICKHOUSE_CHARTS_USER: $CLICKHOUSE_CHARTS_USER
-    CLICKHOUSE_CHARTS_PASSWORD: $CLICKHOUSE_CHARTS_PASSWORD
-    CLICKHOUSE_SME_USER: $CLICKHOUSE_SME_USER
-    CLICKHOUSE_SME_PASSWORD: $CLICKHOUSE_SME_PASSWORD
-    CLICKHOUSE_DCO_USER: $CLICKHOUSE_DCO_USER
-    CLICKHOUSE_DCO_PASSWORD: $CLICKHOUSE_DCO_PASSWORD
-    REDIS_PASSWORD: $YANDEX_CLOUD_REDIS_CACHE_PASSWORD_PROD
     PREFIX: stable
     CLUSTER: prod2
-build-dev:
-  extends:
-    - .build-base
-  stage: build
-  only:
-    - merge_requests
 
 build:
   extends:
     - .build-base
   stage: build
-  only: 
-    - master
+  rules:
+    - if: '$CI_COMMIT_REF_NAME == "master"'
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+
+.deploy-secret-base:
+  image: docker-hosted.artifactory.tcsbank.ru/cicd-images/base-focal
+  stage: deploy
+  before_script:
+    - dp auth service-acc --key-file "${DP_DEPLOY_SERVICE_KEY}"
+    - echo "deb [trusted=yes] http://apt-proxy.tcsbank.ru/repository/apt-ubuntu/ focal main restricted universe multiverse" > /etc/apt/sources.list && echo "deb [trusted=yes] http://apt-proxy.tcsbank.ru/repository/apt-ubuntu/ focal-updates main restricted universe multiverse" >> /etc/apt/sources.list && echo "deb [trusted=yes] http://apt-proxy.tcsbank.ru/repository/apt-ubuntu/ focal-backports main restricted universe multiverse" >> /etc/apt/sources.list && echo "deb [trusted=yes] http://apt-proxy.tcsbank.ru/repository/apt-ubuntu/ focal-security main restricted universe multiverse" >> /etc/apt/sources.list
+    - apt-get update -y && apt-get install gettext-base -y
+  script:
+    - dp auth configure-kubeconfig --cluster-name $K8S_CLUSTER_NAME_PROD --account-name "$DP_DEPLOY_SA_NAME"
+    - envsubst < ./secret.template.yml | kubectl apply -f -
+  rules:
+    - if: '$CI_COMMIT_REF_NAME == "master"'
+      when: manual
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      allow_failure: true
+      when: manual
+
+deploy-secret-m1-prod2:
+  extends:
+    - .deploy-secret-base
+  variables:
+    K8S_CLUSTER_NAME_PROD: m1-prod2.prod
+
+deploy-secret-ds-prod2:
+  extends:
+    - .deploy-secret-base
+  variables:
+    K8S_CLUSTER_NAME_PROD: ds-prod2.prod
 
 deploy-prod:
   image: docker-hosted.artifactory.tcsbank.ru/unic/unic-main-container-1:latest
@@ -115,9 +116,10 @@ deploy-prod:
     PREFIX: stable
     CLUSTER: prod2
   script:
-    - echo "${DOCKER_IMAGE}"
-    - unic deploy --app ${SERVICE_NAME} --stand ${CLUSTER} --dockerImage "${DOCKER_IMAGE}"
-  dependencies:
-    - build
-  only:
-    - master
+    - echo "${IMAGE}"
+    - unic deploy --app "${SERVICE_NAME}" --stand "${CLUSTER}" --dockerImage "${DOCKER_IMAGE}"
+  rules:
+    - if: '$CI_COMMIT_REF_NAME == "master"'
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      allow_failure: true
+      when: manual
