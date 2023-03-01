@@ -109,6 +109,12 @@ deploy-secret-ds-prod2:
   variables:
     K8S_CLUSTER_NAME_PROD: ds-prod2.prod
 
+deploy-secret-ix-prod2:
+  extends:
+    - .deploy-secret-base
+  variables:
+    K8S_CLUSTER_NAME_PROD: ix-m2-prod2.prod
+
 deploy-prod:
   image: docker-hosted.artifactory.tcsbank.ru/unic/unic-main-container-1:latest
   stage: deploy

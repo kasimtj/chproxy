@@ -8,6 +8,7 @@ module.exports = {
           "type": "prod",
           "namespace": "statist",
           "environment": "prod2",
+          "clusters": ['m1-prod2', 'ds-prod2', 'ix-m2-prod2'],
           "services": [
             {
               "name": "app",
