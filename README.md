@@ -16,4 +16,7 @@ Finally, we deploy new image with new configuration on K8S.
 
 ## How to change configuration?
 
-Just edit `secret.template.yml` and add env variables if needed in Devplatform and `.gitlab-ci.yml` :)
+1) Edit `secret.template.yml` and add env variables if needed in Devplatform and `.gitlab-ci.yml`.
+2) Update secrets in k8s by running manual jobs: `deploy-secret-m1-prod2, deploy-secret-ds-prod2, deploy-secret-ix-prod2`
+3) Deploy clickhouse proxy server to update its configuration by running manual job: `deploy-prod`
+That's it :)
