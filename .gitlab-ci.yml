@@ -21,7 +21,7 @@ variables:
   
   SERVICE_NAME: clickhouse-proxy-server
   IMAGE_TAG: $CI_COMMIT_SHA
-  DOCKER_IMAGE: "${DOCKER_REGISTRY}/${CI_PROJECT_NAMESPACE}/${SERVICE_NAME}/${CLUSTER}:${PREFIX}-${IMAGE_TAG}"
+  DOCKER_IMAGE: "${DOCKER_REGISTRY}/${CI_PROJECT_NAMESPACE}/${SERVICE_NAME}:${PREFIX}-${IMAGE_TAG}"
 
   CLICKHOUSE_NODES: "[\"rc1a-0frj3mcfce5fg8f9.mdb.yandexcloud.net:8123\",\"rc1a-dntfp0qefgqql8pa.mdb.yandexcloud.net:8123\",\"rc1a-e3efds88ij1jfb9t.mdb.yandexcloud.net:8123\",\"rc1b-gfntqgsjpc1jf4j7.mdb.yandexcloud.net:8123\",\"rc1b-l6a1c3l1sbu68tlu.mdb.yandexcloud.net:8123\",\"rc1b-nlp8ractq35qp66l.mdb.yandexcloud.net:8123\",\"rc1a-a4tgkl56e7gon3po.mdb.yandexcloud.net:8123\",\"rc1a-nf4gvv3b9vfp1aag.mdb.yandexcloud.net:8123\",\"rc1b-toobdjh1m4ea4fdb.mdb.yandexcloud.net:8123\",\"rc1a-rne1s41ncfo31rgc.mdb.yandexcloud.net:8123\",\"rc1a-tu5o61jb0smd0e3a.mdb.yandexcloud.net:8123\",\"rc1b-b5hdlvnhmamlps6t.mdb.yandexcloud.net:8123\"]"
   CLICKHOUSE_USER_PROD: $CLICKHOUSE_USER_PROD
@@ -69,9 +69,8 @@ stages:
         echo "image ${DOCKER_IMAGE} already exist"
       fi
   variables:
-    IMAGE_NAME_FOR_CHECK: "docker-hosted/${CI_PROJECT_NAMESPACE}/${SERVICE_NAME}/${CLUSTER}/${PREFIX}-${IMAGE_TAG}/*"
+    IMAGE_NAME_FOR_CHECK: "docker-hosted/${CI_PROJECT_NAMESPACE}/${SERVICE_NAME}/${PREFIX}-${IMAGE_TAG}/*"
     PREFIX: stable
-    CLUSTER: prod2
 
 build:
   extends:
@@ -115,12 +114,15 @@ deploy-secret-ix-prod2:
   variables:
     K8S_CLUSTER_NAME_PROD: ix-m2-prod2.prod
 
-deploy-prod:
+deploy-secret-ya-ruc1-dev1:
+  extends:
+    - .deploy-secret-base
+  variables:
+    K8S_CLUSTER_NAME_PROD: ya-ruc1-dev1.dev
+
+.deploy-base:
   image: docker-hosted.artifactory.tcsbank.ru/unic/unic-main-container-1:latest
   stage: deploy
-  variables:
-    PREFIX: stable
-    CLUSTER: prod2
   script:
     - echo "${IMAGE}"
     - unic deploy --app "${SERVICE_NAME}" --stand "${CLUSTER}" --dockerImage "${DOCKER_IMAGE}"
@@ -129,3 +131,18 @@ deploy-prod:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
       allow_failure: true
       when: manual
+
+
+deploy-prod:
+  extends:
+    - .deploy-base
+  variables:
+    PREFIX: stable
+    CLUSTER: prod2
+
+deploy-dev:
+  extends:
+    - .deploy-base
+  variables:
+    PREFIX: stable
+    CLUSTER: dev
