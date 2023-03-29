@@ -44,6 +44,7 @@ variables:
 
 stages:
   - build
+  - deploy-secrets
   - deploy
 
 .build-base:
@@ -82,7 +83,7 @@ build:
 
 .deploy-secret-base:
   image: docker-hosted.artifactory.tcsbank.ru/cicd-images/base-focal
-  stage: deploy
+  stage: deploy-secrets
   before_script:
     - dp auth service-acc --key-file "${DP_DEPLOY_SERVICE_KEY}"
     - echo "deb [trusted=yes] http://apt-proxy.tcsbank.ru/repository/apt-ubuntu/ focal main restricted universe multiverse" > /etc/apt/sources.list && echo "deb [trusted=yes] http://apt-proxy.tcsbank.ru/repository/apt-ubuntu/ focal-updates main restricted universe multiverse" >> /etc/apt/sources.list && echo "deb [trusted=yes] http://apt-proxy.tcsbank.ru/repository/apt-ubuntu/ focal-backports main restricted universe multiverse" >> /etc/apt/sources.list && echo "deb [trusted=yes] http://apt-proxy.tcsbank.ru/repository/apt-ubuntu/ focal-security main restricted universe multiverse" >> /etc/apt/sources.list
@@ -92,7 +93,6 @@ build:
     - envsubst < ./secret.template.yml | kubectl apply -f -
   rules:
     - if: '$CI_COMMIT_REF_NAME == "master"'
-      when: manual
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
       allow_failure: true
       when: manual
