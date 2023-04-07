@@ -23,7 +23,7 @@ variables:
   IMAGE_TAG: $CI_COMMIT_SHA
   DOCKER_IMAGE: "${DOCKER_REGISTRY}/${CI_PROJECT_NAMESPACE}/${SERVICE_NAME}/${CLUSTER}:${PREFIX}-${IMAGE_TAG}"
 
-  CLICKHOUSE_NODES: "[\"rc1a-dntfp0qefgqql8pa.mdb.yandexcloud.net:8123\",\"rc1a-e3efds88ij1jfb9t.mdb.yandexcloud.net:8123\",\"rc1b-gfntqgsjpc1jf4j7.mdb.yandexcloud.net:8123\",\"rc1b-l6a1c3l1sbu68tlu.mdb.yandexcloud.net:8123\",\"rc1b-nlp8ractq35qp66l.mdb.yandexcloud.net:8123\",\"rc1a-a4tgkl56e7gon3po.mdb.yandexcloud.net:8123\",\"rc1a-nf4gvv3b9vfp1aag.mdb.yandexcloud.net:8123\",\"rc1b-toobdjh1m4ea4fdb.mdb.yandexcloud.net:8123\",\"rc1a-rne1s41ncfo31rgc.mdb.yandexcloud.net:8123\",\"rc1a-tu5o61jb0smd0e3a.mdb.yandexcloud.net:8123\",\"rc1b-b5hdlvnhmamlps6t.mdb.yandexcloud.net:8123\"]"
+  CLICKHOUSE_NODES: "[\"rc1a-0frj3mcfce5fg8f9.mdb.yandexcloud.net:8123\",\"rc1a-dntfp0qefgqql8pa.mdb.yandexcloud.net:8123\",\"rc1a-e3efds88ij1jfb9t.mdb.yandexcloud.net:8123\",\"rc1b-gfntqgsjpc1jf4j7.mdb.yandexcloud.net:8123\",\"rc1b-l6a1c3l1sbu68tlu.mdb.yandexcloud.net:8123\",\"rc1b-nlp8ractq35qp66l.mdb.yandexcloud.net:8123\",\"rc1a-a4tgkl56e7gon3po.mdb.yandexcloud.net:8123\",\"rc1a-nf4gvv3b9vfp1aag.mdb.yandexcloud.net:8123\",\"rc1b-toobdjh1m4ea4fdb.mdb.yandexcloud.net:8123\",\"rc1a-rne1s41ncfo31rgc.mdb.yandexcloud.net:8123\",\"rc1a-tu5o61jb0smd0e3a.mdb.yandexcloud.net:8123\",\"rc1b-b5hdlvnhmamlps6t.mdb.yandexcloud.net:8123\"]"
   CLICKHOUSE_USER_PROD: $CLICKHOUSE_USER_PROD
   CLICKHOUSE_PASSWORD_PROD: $CLICKHOUSE_PASSWORD_PROD
   CLICKHOUSE_USER_TEST: $CLICKHOUSE_USER_TEST
