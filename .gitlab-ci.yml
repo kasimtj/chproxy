@@ -23,8 +23,7 @@ variables:
   IMAGE_TAG: $CI_COMMIT_SHA
   DOCKER_IMAGE: "${DOCKER_REGISTRY}/${CI_PROJECT_NAMESPACE}/${SERVICE_NAME}:${PREFIX}-${IMAGE_TAG}"
 
-  CLICKHOUSE_NODES: >
-    [
+  CLICKHOUSE_NODES: "[
       \"rc1a-0frj3mcfce5fg8f9.mdb.yandexcloud.net:8123\",
       \"rc1a-dntfp0qefgqql8pa.mdb.yandexcloud.net:8123\",
       \"rc1a-e3efds88ij1jfb9t.mdb.yandexcloud.net:8123\",
@@ -43,8 +42,7 @@ variables:
       \"rc1a-4juimdn3er8rv8rm.mdb.yandexcloud.net:8123\",
       \"rc1a-lnetom4vhknpbi0f.mdb.yandexcloud.net:8123\",
       \"rc1b-he9vk6o8a6921g6s.mdb.yandexcloud.net:8123\"
-    ]
-
+    ]"
   CLICKHOUSE_USER_PROD: $CLICKHOUSE_USER_PROD
   CLICKHOUSE_PASSWORD_PROD: $CLICKHOUSE_PASSWORD_PROD
   CLICKHOUSE_USER_TEST: $CLICKHOUSE_USER_TEST
