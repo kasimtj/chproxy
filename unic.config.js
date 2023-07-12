@@ -1,11 +1,11 @@
 const resources = {
   "replicas": 2,
   "requests": {
-    "cpu": '50m',
+    "cpu": '250m',
     "memory": '1024Mi',
   },
   "limits": {
-    "cpu": '50m',
+    "cpu": '250m',
     "memory": '1024Mi',
   },
 }
