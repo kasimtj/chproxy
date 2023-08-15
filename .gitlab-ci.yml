@@ -47,7 +47,13 @@ variables:
       \"rc1b-o2sncn2v8h6fqe65.mdb.yandexcloud.net:8123\",
       \"rc1a-het3vjeadb047ua1.mdb.yandexcloud.net:8123\",
       \"rc1a-uub1maaelhkrqfgl.mdb.yandexcloud.net:8123\",
-      \"rc1b-348gi0cmvdiceuj9.mdb.yandexcloud.net:8123\"
+      \"rc1b-348gi0cmvdiceuj9.mdb.yandexcloud.net:8123\",
+      \"rc1a-omju28nn26nt4bev.mdb.yandexcloud.net:8123\",
+      \"rc1b-2i0g5522uq3mta30.mdb.yandexcloud.net:8123\",
+      \"rc1b-mvqep963urbt3gqm.mdb.yandexcloud.net:8123\",
+      \"rc1a-ovuaa3ejfvdf0kuv.mdb.yandexcloud.net:8123\",
+      \"rc1b-enudv3jrm9shms3j.mdb.yandexcloud.net:8123\",
+      \"rc1b-k66c8sgv9a2hkh94.mdb.yandexcloud.net:8123\"
     ]"
   CLICKHOUSE_USER_PROD: $CLICKHOUSE_USER_PROD
   CLICKHOUSE_PASSWORD_PROD: $CLICKHOUSE_PASSWORD_PROD
