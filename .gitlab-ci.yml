@@ -23,7 +23,7 @@ variables:
   IMAGE_TAG: $CI_COMMIT_SHA
   DOCKER_IMAGE: "${DOCKER_REGISTRY}/${CI_PROJECT_NAMESPACE}/${SERVICE_NAME}:${PREFIX}-${IMAGE_TAG}"
 
-  CLICKHOUSE_NODES: "[
+  CLICKHOUSE_PROD_NODES: "[
       \"rc1a-0frj3mcfce5fg8f9.mdb.yandexcloud.net:8123\",
       \"rc1a-dntfp0qefgqql8pa.mdb.yandexcloud.net:8123\",
       \"rc1a-e3efds88ij1jfb9t.mdb.yandexcloud.net:8123\",
@@ -54,6 +54,14 @@ variables:
       \"rc1a-ovuaa3ejfvdf0kuv.mdb.yandexcloud.net:8123\",
       \"rc1b-enudv3jrm9shms3j.mdb.yandexcloud.net:8123\",
       \"rc1b-k66c8sgv9a2hkh94.mdb.yandexcloud.net:8123\"
+    ]"
+  CLICKHOUSE_DEV_NODES: "[
+      \"rc1a-86su01nci1umvb8j.mdb.yandexcloud.net:8123\",
+      \"rc1a-8l6i96v0amf7i28j.mdb.yandexcloud.net:8123\",
+      \"rc1a-t6s2fbn8svh1aq11.mdb.yandexcloud.net:8123\",
+      \"rc1b-9lvltuf7mkuiud58.mdb.yandexcloud.net:8123\",
+      \"rc1b-g3g5pu5qavrb67d9.mdb.yandexcloud.net:8123\",
+      \"rc1b-pu7kedgcdhk82e4m.mdb.yandexcloud.net:8123\",
     ]"
   CLICKHOUSE_USER_PROD: $CLICKHOUSE_USER_PROD
   CLICKHOUSE_PASSWORD_PROD: $CLICKHOUSE_PASSWORD_PROD
@@ -124,7 +132,7 @@ build:
     - apt-get update -y && apt-get install gettext-base -y
   script:
     - dp auth configure-kubeconfig --cluster-name $K8S_CLUSTER_NAME_PROD --account-name "$DP_DEPLOY_SA_NAME"
-    - envsubst < ./secret.template.yml | kubectl apply -f -
+    - envsubst < ./${CONFIG_PATH} | kubectl apply -f -
   rules:
     - if: '$CI_COMMIT_REF_NAME == "master"'
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
@@ -136,24 +144,32 @@ deploy-secret-m1-prod2:
     - .deploy-secret-base
   variables:
     K8S_CLUSTER_NAME_PROD: m1-prod2.prod
+    CLICKHOUSE_NODES: $CLICKHOUSE_PROD_NODES
+    CONFIG_PATH: secret.template.yml
 
 deploy-secret-ds-prod2:
   extends:
     - .deploy-secret-base
   variables:
     K8S_CLUSTER_NAME_PROD: ds-prod2.prod
+    CLICKHOUSE_NODES: $CLICKHOUSE_PROD_NODES
+    CONFIG_PATH: secret.template.yml
 
 deploy-secret-ix-prod2:
   extends:
     - .deploy-secret-base
   variables:
     K8S_CLUSTER_NAME_PROD: ix-m2-prod2.prod
+    CLICKHOUSE_NODES: $CLICKHOUSE_PROD_NODES
+    CONFIG_PATH: secret.template.yml
 
 deploy-secret-ya-ruc1-dev1:
   extends:
     - .deploy-secret-base
   variables:
     K8S_CLUSTER_NAME_PROD: ya-ruc1-dev1.dev
+    CLICKHOUSE_NODES: $CLICKHOUSE_DEV_NODES
+    CONFIG_PATH: secret.template.dev.yml
 
 .deploy-base:
   image: docker-hosted.artifactory.tcsbank.ru/unic/unic-main-container-1:latest

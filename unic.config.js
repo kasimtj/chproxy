@@ -1,4 +1,4 @@
-const resources = {
+const prodResources = {
   "replicas": 2,
   "requests": {
     "cpu": '250m',
@@ -9,6 +9,19 @@ const resources = {
     "memory": '1024Mi',
   },
 }
+
+const devResources = {
+  "replicas": 6,
+  "requests": {
+    "cpu": '250m',
+    "memory": '1024Mi',
+  },
+  "limits": {
+    "cpu": '250m',
+    "memory": '1024Mi',
+  },
+}
+
 
 const ports = {
   "external": 80,
@@ -65,7 +78,7 @@ const testConfig = {
   "services": [
     {
       "name": "app",
-      "resources": resources,
+      "resources": devResources,
       "ports": ports,
       "probes": probes,
       "extensions": extensions,
@@ -84,7 +97,7 @@ const prodConfig = {
   "services": [
     {
       "name": "app",
-      "resources": resources,
+      "resources": prodResources,
       "ports": ports,
       "probes": probes,
       "extensions": extensions,
