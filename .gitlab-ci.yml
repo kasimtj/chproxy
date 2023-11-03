@@ -55,6 +55,38 @@ variables:
       \"rc1b-enudv3jrm9shms3j.mdb.yandexcloud.net:8123\",
       \"rc1b-k66c8sgv9a2hkh94.mdb.yandexcloud.net:8123\"
     ]"
+  CLICKHOUSE_PROD2_NODES: "[
+      \"rc1a-clqopju5gb59spok.mdb.yandexcloud.net:8123\",
+      \"rc1a-joklj9ja6abfsem1.mdb.yandexcloud.net:8123\",
+      \"rc1b-9dva927pkj6qggrq.mdb.yandexcloud.net:8123\",
+      \"rc1a-c2v5tlsinpaumobd.mdb.yandexcloud.net:8123\",
+      \"rc1a-jjmmrr06clgk5p55.mdb.yandexcloud.net:8123\",
+      \"rc1b-99q8qfe934065qni.mdb.yandexcloud.net:8123\",
+      \"rc1a-a1bdsfpm0tfat1ip.mdb.yandexcloud.net:8123\",
+      \"rc1a-adrac6i3dvsnstgd.mdb.yandexcloud.net:8123\",
+      \"rc1b-q8r8vg0bimteblit.mdb.yandexcloud.net:8123\",
+      \"rc1a-gcjsj44b3mt8vjdf.mdb.yandexcloud.net:8123\",
+      \"rc1a-grejumiquh6g2acs.mdb.yandexcloud.net:8123\",
+      \"rc1b-5ucembmo9f0pojhj.mdb.yandexcloud.net:8123\",
+      \"rc1a-m1k2tgh6q0ekctkb.mdb.yandexcloud.net:8123\",
+      \"rc1a-ml4jsnqek4tp1o6m.mdb.yandexcloud.net:8123\",
+      \"rc1b-dchbjhbjijrqu146.mdb.yandexcloud.net:8123\",
+      \"rc1a-5g1o97kfjfkpafad.mdb.yandexcloud.net:8123\",
+      \"rc1a-l2ntk7lameeu37of.mdb.yandexcloud.net:8123\",
+      \"rc1b-48p8i01060uqv1ft.mdb.yandexcloud.net:8123\",
+      \"rc1a-844i9ero6esunbi0.mdb.yandexcloud.net:8123\",
+      \"rc1a-b400rs3jq1qb92l2.mdb.yandexcloud.net:8123\",
+      \"rc1b-hf2dt87eudbt3ff5.mdb.yandexcloud.net:8123\",
+      \"rc1a-82oif7ja065br7jm.mdb.yandexcloud.net:8123\",
+      \"rc1a-ps6e3b18971r2lpf.mdb.yandexcloud.net:8123\",
+      \"rc1b-vep17kobunb16ogr.mdb.yandexcloud.net:8123\",
+      \"rc1a-f1d4679qchsm9ce3.mdb.yandexcloud.net:8123\",
+      \"rc1a-huuudlmoel2tv74e.mdb.yandexcloud.net:8123\",
+      \"rc1b-o8m7nbvss1nmiho0.mdb.yandexcloud.net:8123\",
+      \"rc1a-16eibt76u3nmqujb.mdb.yandexcloud.net:8123\",
+      \"rc1a-2rpsa7vld1n6pp6k.mdb.yandexcloud.net:8123\",
+      \"rc1b-va5ooccdqjslq5qk.mdb.yandexcloud.net:8123\"
+    ]"
   CLICKHOUSE_DEV_NODES: "[
       \"rc1a-86su01nci1umvb8j.mdb.yandexcloud.net:8123\",
       \"rc1a-8l6i96v0amf7i28j.mdb.yandexcloud.net:8123\",
@@ -65,6 +97,7 @@ variables:
     ]"
   CLICKHOUSE_USER_PROD: $CLICKHOUSE_USER_PROD
   CLICKHOUSE_PASSWORD_PROD: $CLICKHOUSE_PASSWORD_PROD
+  CLICKHOUSE_PASSWORD_PROD2: $CLICKHOUSE_PASSWORD_PROD2
   CLICKHOUSE_USER_TEST: $CLICKHOUSE_USER_TEST
   CLICKHOUSE_PASSWORD_TEST: $CLICKHOUSE_PASSWORD_TEST
   CLICKHOUSE_PROJECT_OWNER_USER_DEV: $CLICKHOUSE_PROJECT_OWNER_USER_DEV
@@ -81,6 +114,14 @@ variables:
   CLICKHOUSE_DCO_PASSWORD: $CLICKHOUSE_DCO_PASSWORD
   CLICKHOUSE_VOIP_TEAM_USER: $CLICKHOUSE_VOIP_TEAM_USER
   CLICKHOUSE_VOIP_TEAM_PASSWORD: $CLICKHOUSE_VOIP_TEAM_PASSWORD
+  CLICKHOUSE_REDALERT_USER: $CLICKHOUSE_REDALERT_USER
+  CLICKHOUSE_REDALERT_PASSWORD: $CLICKHOUSE_REDALERT_PASSWORD
+  CLICKHOUSE_MB_ANALYTICS_USER: $CLICKHOUSE_MB_ANALYTICS_USER
+  CLICKHOUSE_MB_ANALYTICS_PASSWORD: $CLICKHOUSE_MB_ANALYTICS_PASSWORD
+  CLICKHOUSE_DWH_NIFI_USER: $CLICKHOUSE_DWH_NIFI_USER
+  CLICKHOUSE_DWH_NIFI_PASSWORD: $CLICKHOUSE_DWH_NIFI_PASSWORD
+  CLICKHOUSE_DWH_NIFI_HISTORICAL_USER: $CLICKHOUSE_DWH_NIFI_HISTORICAL_USER
+  CLICKHOUSE_DWH_NIFI_HISTORICAL_PASSWORD: $CLICKHOUSE_DWH_NIFI_HISTORICAL_PASSWORD
   CLICKHOUSE_ANALYTICS_SERVICE_USER: $CLICKHOUSE_ANALYTICS_SERVICE_USER
   CLICKHOUSE_ANALYTICS_SERVICE_PASSWORD: $CLICKHOUSE_ANALYTICS_SERVICE_PASSWORD
   REDIS_PASSWORD: $YANDEX_CLOUD_REDIS_CACHE_PASSWORD_PROD
