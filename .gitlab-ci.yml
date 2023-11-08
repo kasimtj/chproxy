@@ -185,7 +185,7 @@ deploy-secret-m1-prod2:
     - .deploy-secret-base
   variables:
     K8S_CLUSTER_NAME_PROD: m1-prod2.prod
-    CLICKHOUSE_NODES: $CLICKHOUSE_PROD_NODES
+    CLICKHOUSE_NODES: $CLICKHOUSE_PROD2_NODES
     CONFIG_PATH: secret.template.yml
 
 deploy-secret-ds-prod2:
@@ -193,7 +193,7 @@ deploy-secret-ds-prod2:
     - .deploy-secret-base
   variables:
     K8S_CLUSTER_NAME_PROD: ds-prod2.prod
-    CLICKHOUSE_NODES: $CLICKHOUSE_PROD_NODES
+    CLICKHOUSE_NODES: $CLICKHOUSE_PROD2_NODES
     CONFIG_PATH: secret.template.yml
 
 deploy-secret-ix-prod2:
@@ -201,7 +201,7 @@ deploy-secret-ix-prod2:
     - .deploy-secret-base
   variables:
     K8S_CLUSTER_NAME_PROD: ix-m2-prod2.prod
-    CLICKHOUSE_NODES: $CLICKHOUSE_PROD_NODES
+    CLICKHOUSE_NODES: $CLICKHOUSE_PROD2_NODES
     CONFIG_PATH: secret.template.yml
 
 deploy-secret-ya-ruc1-dev1:
