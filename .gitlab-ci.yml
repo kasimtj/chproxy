@@ -124,6 +124,8 @@ variables:
   CLICKHOUSE_DWH_NIFI_HISTORICAL_PASSWORD: $CLICKHOUSE_DWH_NIFI_HISTORICAL_PASSWORD
   CLICKHOUSE_ANALYTICS_SERVICE_USER: $CLICKHOUSE_ANALYTICS_SERVICE_USER
   CLICKHOUSE_ANALYTICS_SERVICE_PASSWORD: $CLICKHOUSE_ANALYTICS_SERVICE_PASSWORD
+  CLICKHOUSE_CORETECH_FRONTEND_USER: $CLICKHOUSE_CORETECH_FRONTEND_USER
+  CLICKHOUSE_CORETECH_FRONTEND_PASSWORD: $CLICKHOUSE_CORETECH_FRONTEND_PASSWORD
   REDIS_PASSWORD: $YANDEX_CLOUD_REDIS_CACHE_PASSWORD_PROD
 
 stages:
@@ -133,7 +135,7 @@ stages:
 
 .build-base:
   image:
-    name: docker-hosted.artifactory.tcsbank.ru/cicd-images/base-kaniko:release-v1.8.12
+    name: docker-hosted.artifactory.tcsbank.ru/cicd-images/base-kaniko:release-v1.8.45
   before_script:
     - dp auth service-acc --key-file $DP_DEPLOY_SERVICE_KEY # в переменной должен лежать ключ сервис-аккаунта
     - dp auth configure-kaniko # настройка kaniko (токен действует 1 час)
