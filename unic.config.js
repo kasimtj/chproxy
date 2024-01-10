@@ -11,7 +11,7 @@ const prodResources = {
 }
 
 const devResources = {
-  "replicas": 6,
+  "replicas": 1,
   "requests": {
     "cpu": '250m',
     "memory": '1024Mi',
