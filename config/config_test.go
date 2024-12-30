@@ -935,6 +935,7 @@ param_groups:
 connection_pool:
   max_idle_conns: 100
   max_idle_conns_per_host: 2
+query_mask: []
 `, redisPort)
 	tested := fullConfig.String()
 	if tested != expected {

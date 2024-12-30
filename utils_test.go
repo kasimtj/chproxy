@@ -4,10 +4,11 @@ import (
 	"bytes"
 	"compress/gzip"
 	"fmt"
-	"github.com/stretchr/testify/assert"
 	"net/http"
 	"net/url"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestSkipLeadingComments(t *testing.T) {
@@ -26,7 +27,7 @@ func TestSkipLeadingComments(t *testing.T) {
 
 func testSkipLeadingComments(t *testing.T, q, expectedQ string) {
 	t.Helper()
-	s := skipLeadingComments([]byte(q))
+	s := skipLeadingComments(MaskedQuery(q))
 	if string(s) != expectedQ {
 		t.Fatalf("unexpected result %q; expecting %q", s, expectedQ)
 	}
@@ -77,7 +78,7 @@ func TestGetQuerySnippetGET(t *testing.T) {
 	params.Set("query", q)
 	req.URL.RawQuery = params.Encode()
 	query := getQuerySnippet(req)
-	if query != q {
+	if query.UnmaskedString() != q {
 		t.Fatalf("got: %q; expected: %q", query, q)
 	}
 }
@@ -88,7 +89,7 @@ func TestGetQuerySnippetGETBody(t *testing.T) {
 	req, err := http.NewRequest("GET", "", body)
 	checkErr(t, err)
 	query := getQuerySnippet(req)
-	if query != q {
+	if query.UnmaskedString() != q {
 		t.Fatalf("got: %q; expected: %q", query, q)
 	}
 }
@@ -107,7 +108,7 @@ func TestGetQuerySnippetGETBothQueryAndBody(t *testing.T) {
 	req.URL.RawQuery = params.Encode()
 
 	query := getQuerySnippet(req)
-	if query != expectedQuery {
+	if query.UnmaskedString() != expectedQuery {
 		t.Fatalf("got: %q; expected: %q", query, expectedQuery)
 	}
 }
@@ -118,7 +119,7 @@ func TestGetQuerySnippetPOST(t *testing.T) {
 	req, err := http.NewRequest("POST", "", body)
 	checkErr(t, err)
 	query := getQuerySnippet(req)
-	if query != q {
+	if query.UnmaskedString() != q {
 		t.Fatalf("got: %q; expected: %q", query, q)
 	}
 }
@@ -138,7 +139,7 @@ func TestGetQuerySnippetGzipped(t *testing.T) {
 		t.Fatal(err)
 	}
 	query := getQuerySnippet(req)
-	if query[:100] != string(q[:100]) {
+	if query[:100].UnmaskedString() != string(q[:100]) {
 		t.Fatalf("got: %q; expected: %q", query[:100], q[:100])
 	}
 }
@@ -199,7 +200,7 @@ func TestDecompression(t *testing.T) {
 			lz4TestQuery,
 			func(req *http.Request) error {
 				q := getQuerySnippet(req)
-				if q[:100] != string(testQuery[:100]) {
+				if q[:100].UnmaskedString() != testQuery[:100] {
 					return fmt.Errorf("got: %q; expected: %q", q[:100], testQuery[:100])
 				}
 				return nil
@@ -210,7 +211,7 @@ func TestDecompression(t *testing.T) {
 			lz4TestQuery + "foobar", // write whatever to buf to make the data partially invalid
 			func(req *http.Request) error {
 				q := getQuerySnippet(req)
-				if q[:50] != testQuery[:50] {
+				if q[:50].UnmaskedString() != testQuery[:50] {
 					return fmt.Errorf("got: %q; expected: %q", q[:50], testQuery[:50])
 				}
 				return nil
@@ -221,7 +222,7 @@ func TestDecompression(t *testing.T) {
 			"foobar", // write totally invalid data and treat it as compressed
 			func(req *http.Request) error {
 				q := getQuerySnippet(req)
-				if q != "foobar" {
+				if q.UnmaskedString() != "foobar" {
 					t.Fatalf("got: %q; expected: %q", q, "foobar")
 				}
 				return nil
@@ -247,7 +248,7 @@ func TestDecompression(t *testing.T) {
 			zstdTestQuery,
 			func(req *http.Request) error {
 				q := getQuerySnippet(req)
-				if q[:100] != string(testQuery[:100]) {
+				if q[:100].UnmaskedString() != testQuery[:100] {
 					return fmt.Errorf("got: %q; expected: %q", q[:100], testQuery[:100])
 				}
 				return nil
@@ -258,7 +259,7 @@ func TestDecompression(t *testing.T) {
 			zstdTestQuery + "foobar", // write whatever to buf to make the data partially invalid
 			func(req *http.Request) error {
 				q := getQuerySnippet(req)
-				if q[:50] != testQuery[:50] {
+				if q[:50].UnmaskedString() != testQuery[:50] {
 					return fmt.Errorf("got: %q; expected: %q", q[:50], testQuery[:50])
 				}
 				return nil
@@ -314,7 +315,7 @@ func TestGetSessionTimeout(t *testing.T) {
 	}
 }
 
-func makeQuery(n int) []byte {
+func makeQuery(n int) MaskedQuery {
 	q1 := "SELECT column "
 	q2 := "WHERE Date=today()"
 

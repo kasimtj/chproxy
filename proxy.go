@@ -173,7 +173,7 @@ func (rp *reverseProxy) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 	requestDuration.With(s.labels).Observe(since)
 }
 
-func shouldRespondFromCache(s *scope, origParams url.Values, req *http.Request) ([]byte, bool, error) {
+func shouldRespondFromCache(s *scope, origParams url.Values, req *http.Request) (MaskedQuery, bool, error) {
 	if s.user.cache == nil || s.user.cache.Cache == nil {
 		return nil, false, nil
 	}
@@ -372,7 +372,7 @@ func listenToCloseNotify(ctx context.Context, rw ResponseWriterWithCode) (contex
 }
 
 //nolint:cyclop //TODO refactor this method, most likely requires some work.
-func (rp *reverseProxy) serveFromCache(s *scope, srw *statResponseWriter, req *http.Request, origParams url.Values, q []byte) {
+func (rp *reverseProxy) serveFromCache(s *scope, srw *statResponseWriter, req *http.Request, origParams url.Values, q MaskedQuery) {
 	labels := makeCacheLabels(s)
 	key := newCacheKey(s, origParams, q, req)
 
@@ -536,7 +536,7 @@ func makeCacheLabels(s *scope) prometheus.Labels {
 	}
 }
 
-func newCacheKey(s *scope, origParams url.Values, q []byte, req *http.Request) *cache.Key {
+func newCacheKey(s *scope, origParams url.Values, q MaskedQuery, req *http.Request) *cache.Key {
 	var userParamsHash uint32
 	if s.user.params != nil {
 		userParamsHash = s.user.params.key
@@ -580,7 +580,7 @@ func toString(stream io.Reader) (string, error) {
 var clickhouseRecoverableStatusCodes = map[int]struct{}{http.StatusServiceUnavailable: {}, http.StatusRequestTimeout: {}}
 
 func (rp *reverseProxy) completeTransaction(s *scope, statusCode int, userCache *cache.AsyncCache, key *cache.Key,
-	q []byte,
+	q MaskedQuery,
 	failReason string,
 ) {
 	// complete successful transactions or those with empty fail reason

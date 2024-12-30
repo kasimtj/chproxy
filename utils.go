@@ -66,7 +66,7 @@ func getSessionTimeout(req *http.Request) int {
 // getQuerySnippet returns query snippet.
 //
 // getQuerySnippet must be called only for error reporting.
-func getQuerySnippet(req *http.Request) string {
+func getQuerySnippet(req *http.Request) MaskedQuery {
 	query := req.URL.Query().Get("query")
 	body := getQuerySnippetFromBody(req)
 
@@ -74,7 +74,7 @@ func getQuerySnippet(req *http.Request) string {
 		query += "\n"
 	}
 
-	return query + body
+	return MaskedQuery(query + body)
 }
 
 func hash(s string) uint32 {
@@ -129,7 +129,7 @@ func getQuerySnippetFromBody(req *http.Request) string {
 }
 
 // getFullQuery returns full query from req.
-func getFullQuery(req *http.Request) ([]byte, error) {
+func getFullQuery(req *http.Request) (MaskedQuery, error) {
 	var result bytes.Buffer
 
 	if req.URL.Query().Get("query") != "" {
@@ -177,7 +177,7 @@ func getFullQueryFromBody(req *http.Request) ([]byte, error) {
 var cachableStatements = []string{"SELECT", "WITH"}
 
 // canCacheQuery returns true if q can be cached.
-func canCacheQuery(q []byte) bool {
+func canCacheQuery(q MaskedQuery) bool {
 	q = skipLeadingComments(q)
 
 	for _, statement := range cachableStatements {
@@ -195,7 +195,7 @@ func canCacheQuery(q []byte) bool {
 }
 
 //nolint:cyclop // No clean way to split this.
-func skipLeadingComments(q []byte) []byte {
+func skipLeadingComments(q MaskedQuery) MaskedQuery {
 	for len(q) > 0 {
 		switch q[0] {
 		case '\t', '\n', '\v', '\f', '\r', ' ':

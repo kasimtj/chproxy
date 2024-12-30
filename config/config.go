@@ -78,6 +78,8 @@ type Config struct {
 
 	ConnectionPool ConnectionPool `yaml:"connection_pool,omitempty"`
 
+	QueryMask []string `yaml:"query_mask"`
+
 	// Allow to proxy ping requests
 	AllowPing bool `yaml:"allow_ping,omitempty"`
 

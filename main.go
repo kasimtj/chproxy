@@ -53,6 +53,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("error while loading config: %s", err)
 	}
+	initMaskReplacer(cfg.QueryMask...)
 	registerMetrics(cfg)
 	if err = applyConfig(cfg); err != nil {
 		log.Fatalf("error while applying config: %s", err)
